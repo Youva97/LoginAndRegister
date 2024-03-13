@@ -135,7 +135,7 @@ public class MyRequest {
     }
 
     public interface RetoursPHP {
-        void toutOK(JSONObject js, String message);//tout c'est bien passé
+        void toutOK(JSONObject js, String message) throws JSONException;//tout c'est bien passé
 
         void pasOK(String message);// erreur de saisie
 

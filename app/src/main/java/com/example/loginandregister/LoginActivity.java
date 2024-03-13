@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.RequestQueue;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity {
@@ -20,6 +21,7 @@ public class LoginActivity extends AppCompatActivity {
     protected EditText editTxtLogin, editTxtPassword;
     protected RequestQueue queue;
     protected MyRequest request;
+    private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,12 @@ public class LoginActivity extends AppCompatActivity {
 
         queue = MySingleton.getInstance(this).getRequestQueue();
         request = new MyRequest(this, queue);
+
+        sessionManager = new SessionManager(this);
+        if (sessionManager.isLogged()) {
+            Intent i = new Intent(getApplicationContext(), MonEspace.class);
+            startActivity(i);
+        }
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,18 +56,33 @@ public class LoginActivity extends AppCompatActivity {
                 final String LOGIN = editTxtLogin.getText().toString().trim();
                 Log.d("LOGIN", "Le login: " + LOGIN);
                 final String PASSWORD = editTxtPassword.getText().toString().trim();
-                Log.d("password", "Le password: " + PASSWORD);
+                Log.d("PASSWORD", "Le password: " + PASSWORD);
 
+                Log.d("request", "request: " + request);
                 request.login(LOGIN, PASSWORD, new MyRequest.RetoursPHP() {
+
+
                     @Override
-                    public void toutOK(JSONObject js , String message) {
+                    public void toutOK(JSONObject js, String message) throws JSONException {
                         Log.d("PHP", "messagePHP" + message);
+                        JSONObject user = js.getJSONObject("user");
+                        String email = user.getString("login");
+                        String login = user.getString("pseudo");
+                        String id = user.getString("id");
 
+
+                        sessionManager.insertUser(id, login, email);
                         Intent intentLogin = new Intent(getApplicationContext(), MonEspace.class);
-
-                        startActivity(intentLogin);
+//                            intentLogin.putExtra("email", email);
+//                            intentLogin.putExtra("pseudo", pseudo);
+//                            intentLogin.putExtra("id", id);
                         Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
                         startActivity(intentLogin);
+                        finish();
+
+                        // Affichage des informations de l'utilisateur dans la console
+                        Log.d("User Info", "ID: " + id + ", Pseudo: " + login + ", Email: " + email);
+
                     }
 
                     @Override
