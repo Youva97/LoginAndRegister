@@ -29,27 +29,51 @@ tools:context=".LoginActivity">
     app:layout_constraintTop_toTopOf="parent"
     app:layout_constraintVertical_bias="0.69">
 
-    <EditText
+
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/editTxtLogin"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:gravity="center"
-        android:inputType="text"
-        android:hint="Login"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="30dp"/>
+        android:layout_height="wrap_content"
+        app:counterEnabled="true"
+        app:counterMaxLength="10"
+        app:errorEnabled="true">
 
-    <EditText
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:gravity="center"
+            android:hint="Login"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:inputType="text"
+            android:layout_marginBottom="30dp"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/editTxtPassword"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:gravity="center"
-        android:inputType="text"
-        android:hint="Mot de passe"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="30dp"/>
+        android:layout_height="wrap_content"
+        app:counterEnabled="true"
+        app:counterMaxLength="10"
+        android:layout_marginBottom="30dp"
+        app:errorEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:gravity="center"
+            android:hint="Mot de passe"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:inputType="textPassword"
+            android:layout_marginBottom="30dp"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -82,6 +106,12 @@ tools:context=".LoginActivity">
             app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
     </LinearLayout>
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:visibility="gone" />
 
 </LinearLayout>
 

@@ -6,22 +6,37 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.RequestQueue;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.regex.Pattern;
+
 public class LoginActivity extends AppCompatActivity {
 
     protected Button btnRegister, btnLogin;
-    protected EditText editTxtLogin, editTxtPassword;
+    protected TextInputLayout editTxtLogin, editTxtPassword;
     protected RequestQueue queue;
     protected MyRequest request;
+    private ProgressBar pgBar;
     private SessionManager sessionManager;
+
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile("^"+
+            "(?=.*[0-9])" +
+            "(?=.*[a-z])" +
+            "(?=.*[A-Z])" +
+            "(?=.*[@#!$%^&+=])" +
+            "(?=\\S+$)" +
+            ".{6,20}" +
+            "$");
+    private String strLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
         btnRegister = findViewById(R.id.btnRegister);
         editTxtLogin = findViewById(R.id.editTxtLogin);
         editTxtPassword = findViewById(R.id.editTxtPassword);
+        pgBar = findViewById(R.id.progressBar);
 
         queue = MySingleton.getInstance(this).getRequestQueue();
         request = new MyRequest(this, queue);
@@ -53,6 +69,12 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                validLogin();
+                validPassword();
+
+                if (!validLogin() || !validPassword())
+                    return;
+                pgBar.setVisibility(View.VISIBLE);
                 final String LOGIN = editTxtLogin.getText().toString().trim();
                 Log.d("LOGIN", "Le login: " + LOGIN);
                 final String PASSWORD = editTxtPassword.getText().toString().trim();
